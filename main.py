@@ -35,13 +35,27 @@ def display(frame, predictions):
 
         # Display
         cv2.imshow('prediction', frame)
+        
+def click_box(predictions):
+    """
+    Functie voor het klikken op een box
+    :param predictions: voorspellingen van het model
+    :return: None
+    """
 
+    for result in predictions:
+        for box in result.boxes:
+            x1, y1, x2, y2 = map(int, box.xyxy[0])
+            pyautogui.click(x1 + (x2 - x1) // 2, y1 + (y2 - y1) // 2)
+
+     
 def main():
     while True:
         frame = capture_screen()
         results = model(frame)
 
         display(frame, results)
+        click_box(results)
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
